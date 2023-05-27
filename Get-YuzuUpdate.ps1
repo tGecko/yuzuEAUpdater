@@ -1,7 +1,6 @@
 
 $yuzuRoamingFolder = Join-Path $env:APPDATA "yuzu"
 $configPath = Join-Path $yuzuRoamingFolder "updateConfig.txt"
-
 $yuzuFolder = Get-Content $configPath -ErrorAction SilentlyContinue
 
 while (($null -eq $yuzuFolder) -or (!(Test-Path (Join-Path $yuzuFolder "yuzu.exe")))) {
@@ -26,7 +25,7 @@ while (($null -eq $yuzuFolder) -or (!(Test-Path (Join-Path $yuzuFolder "yuzu.exe
 $ProgressPreference = 'SilentlyContinue'
 
 Write-Host "Getting latest yuzu version"
-$content = Invoke-WebRequest -Uri "https://github.com/pineappleEA/pineapple-src/releases/latest"
+$content = Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/pineappleEA/pineapple-src/releases/latest"
 $latestVersion = ([regex]::match($content.RawContent, "Release EA-\d\d\d\d").Value)[-4..-1] -join ""
 
 Write-Host "Getting current yuzu version"
@@ -39,7 +38,7 @@ if ($latestVersion -gt $currentVersion) {
     Write-Host "Downloading yuzu early access version $latestVersion"
     $downloadlink = "https://github.com/pineappleEA/pineapple-src/releases/download/EA-$latestVersion/Windows-Yuzu-EA-$latestVersion.zip"
     $downloadFilePath = Join-Path $env:TEMP "$latestVersion.zip"
-    Invoke-WebRequest -Uri $downloadlink -OutFile $downloadFilePath
+    Invoke-WebRequest -Uri $downloadlink -OutFile $downloadFilePath -UseBasicParsing
     Write-Host "File Downloaded. Backing up current install"
     if (Get-Process "yuzu" -ErrorAction SilentlyContinue) {
         Write-Host "Yuzu is running, qutting it."
