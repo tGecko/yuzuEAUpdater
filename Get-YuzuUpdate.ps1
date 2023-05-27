@@ -52,7 +52,7 @@ if ($latestVersion -gt $currentVersion) {
     Expand-Archive -Path $downloadFilePath -DestinationPath $yuzuFolder
     $oldUserFolder = Join-Path $newFolderName "user"
     $newUserFolder = Join-Path $yuzuFolder "user"
-    Copy-Item -Path $userFolder -Destination $yuzuFolder -recurse -Force
+    Copy-Item -Path $oldUserFolder -Destination $newUserFolder -recurse -Force
     Move-Item "$(Join-Path $yuzuFolder "yuzu-windows-msvc-early-access")\*" $yuzuFolder
     Remove-Item (Join-Path $yuzuFolder "yuzu-windows-msvc-early-access")
     Remove-Item $downloadFilePath
