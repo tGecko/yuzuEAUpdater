@@ -46,9 +46,13 @@ if ($latestVersion -gt $currentVersion) {
         Get-Process "yuzu" | Stop-Process -Force
         Start-Sleep -Milliseconds 200
     }
-    Rename-Item -Path $yuzuFolder -NewName "$yuzuFolder-Backup-$currentVersion"
+    $newFolderName = "$yuzuFolder-Backup-$currentVersion"
+    Rename-Item -Path $yuzuFolder -NewName $newFolderName
     Write-Host "Extracting version $latestVersion to $yuzuFolder"
     Expand-Archive -Path $downloadFilePath -DestinationPath $yuzuFolder
+    $oldUserFolder = Join-Path $newFolderName "user"
+    $newUserFolder = Join-Path $yuzuFolder "user"
+    Copy-Item -Path $userFolder -Destination $yuzuFolder -recurse -Force
     Move-Item "$(Join-Path $yuzuFolder "yuzu-windows-msvc-early-access")\*" $yuzuFolder
     Remove-Item (Join-Path $yuzuFolder "yuzu-windows-msvc-early-access")
     Remove-Item $downloadFilePath
